@@ -36,9 +36,10 @@ kind: Service
 metadata:
   name: civic-backend-service
 spec:
-  type: ClusterIP # Keeps the backend private, only accessible from inside the cluster
+  type: NodePort # Changed from ClusterIP to NodePort to allow public access
   selector:
     app: civic-backend
   ports:
   - port: 5000
     targetPort: 5000
+    nodePort: 30001 # Backend will be at http://<IP>:30001/api

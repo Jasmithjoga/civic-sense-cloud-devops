@@ -1,0 +1,54 @@
+services:
+  # ── Frontend (Static Site) ────────────────────────────────────────────────────
+  - type: web
+    name: civicsense-frontend
+    env: static
+    rootDir: my-app
+    buildCommand: npm install && npm run build
+    staticPublishPath: build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://civicsense-tvmn.onrender.com
+      - key: CI
+        value: false
+      - key: GENERATE_SOURCEMAP
+        value: false
+      - key: DISABLE_ESLINT_PLUGIN
+        value: true
+
+  # ── Backend (Web Service) ─────────────────────────────────────────────────────
+  - type: web
+    name: civicsense-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: ADMIN_SECRET
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: CLIENT_URL
+        sync: false  # Set to your Render frontend URL

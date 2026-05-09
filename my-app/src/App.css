@@ -1,0 +1,4 @@
+/* Reset default CRA styles - Tailwind handles everything */
+body {
+  margin: 0;
+}

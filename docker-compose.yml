@@ -1,0 +1,28 @@
+services:
+  # Backend API
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=production
+      - MONGO_URI=${MONGO_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRE=7d
+      - ADMIN_SECRET=${ADMIN_SECRET:-admin123}
+      - CLIENT_URL=${CLIENT_URL:-http://localhost:9090}
+    restart: always
+
+  # Frontend UI
+  frontend:
+    build:
+      context: ./my-app
+      args:
+        - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:5000}
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
+

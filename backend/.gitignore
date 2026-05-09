@@ -1,0 +1,4 @@
+# Dependencies to ignore in git
+node_modules/
+.env
+*.log

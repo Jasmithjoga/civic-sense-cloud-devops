@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: civic-backend
+  labels:
+    app: civic-backend
+spec:
+  replicas: 2 # Runs 2 copies of your backend for high availability
+  selector:
+    matchLabels:
+      app: civic-backend
+  template:
+    metadata:
+      labels:
+        app: civic-backend
+    spec:
+      containers:
+      - name: backend
+        # We will replace this with your actual Docker Hub username later
+        image: abhi754/civicsense-backend:latest
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - secretRef:
+            name: civic-secrets
+        env:
+        - name: PORT
+          value: "5000"
+        - name: NODE_ENV
+          value: "production"
+        - name: JWT_EXPIRE
+          value: "7d"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: civic-backend-service
+spec:
+  type: ClusterIP # Keeps the backend private, only accessible from inside the cluster
+  selector:
+    app: civic-backend
+  ports:
+  - port: 5000
+    targetPort: 5000

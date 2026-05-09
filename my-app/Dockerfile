@@ -2,7 +2,7 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm install --no-audit --prefer-offline
 COPY . .
 # Set the API URL for the build
 ARG REACT_APP_API_URL=http://localhost:5001/api

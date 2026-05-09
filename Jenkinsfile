@@ -30,8 +30,8 @@ pipeline {
                 sh "docker build -t abhi754/civicsense-backend:latest ./backend"
                 sh "docker push abhi754/civicsense-backend:latest"
                 
-                // Build & Push Frontend with the correct API URL
-                sh "docker build --build-arg REACT_APP_API_URL=http://${EC2_IP}:30001/api -t abhi754/civicsense-frontend:latest ./my-app"
+                // Build & Push Frontend with the correct API URL (removed trailing /api to fix double prefix)
+                sh "docker build --build-arg REACT_APP_API_URL=http://${EC2_IP}:30001 -t abhi754/civicsense-frontend:latest ./my-app"
                 sh "docker push abhi754/civicsense-frontend:latest"
             }
         }

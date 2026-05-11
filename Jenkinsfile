@@ -56,10 +56,15 @@ pipeline {
                     // 2. Copy the Kubernetes YAML files to the Master Node
                     sh "scp -o StrictHostKeyChecking=no k8s/*.yaml ${EC2_USER}@${EC2_IP}:${DEPLOY_PATH}/k8s/"
                     
-                    // 3. Tell Kubernetes to apply the changes and restart the pods to grab the new images
+                    // 3. Tell Kubernetes to apply the changes
                     sh """
                         ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} '
                             cd ${DEPLOY_PATH}
+                            # Create namespace first and wait for it to be ready
+                            kubectl apply -f k8s/namespace.yaml
+                            sleep 2
+                            
+                            # Now apply the rest of the resources
                             kubectl apply -f k8s/
                             
                             # Force a restart to ensure it pulls the latest image we just pushed

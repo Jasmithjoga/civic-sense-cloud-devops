@@ -9,6 +9,8 @@ ARG REACT_APP_API_URL=http://localhost:5001/api
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 # Increase NodeJS heap limit to prevent out of memory errors
 ENV NODE_OPTIONS="--max_old_space_size=2048"
+# Increase memory limit for the build process
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 RUN npm run build
 
 # Serve stage

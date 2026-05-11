@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: civic-frontend
+  namespace: civic-sense
   labels:
     app: civic-frontend
 spec:
@@ -24,6 +25,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: civic-frontend-service
+  namespace: civic-sense
 spec:
   type: NodePort # Exposes the frontend to the public internet
   selector:

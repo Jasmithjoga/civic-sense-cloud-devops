@@ -63,8 +63,8 @@ pipeline {
                             kubectl apply -f k8s/
                             
                             # Force a restart to ensure it pulls the latest image we just pushed
-                            kubectl rollout restart deployment civic-frontend
-                            kubectl rollout restart deployment civic-backend
+                            kubectl rollout restart deployment civic-frontend -n civic-sense
+                            kubectl rollout restart deployment civic-backend -n civic-sense
                         '
                     """
                 }

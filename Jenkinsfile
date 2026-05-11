@@ -8,7 +8,7 @@ pipeline {
         // Configuration
         EC2_USER = "ubuntu"
         // Replace this with your Master Node's Public IP
-        EC2_IP = "3.236.28.67" 
+        EC2_IP = "44.220.61.115" 
         SSH_CRED_ID = "ec2-ssh-key"
         DEPLOY_PATH = "/home/${EC2_USER}/civic-sense"
     }
@@ -37,8 +37,8 @@ pipeline {
                 }
                 stage('Frontend') {
                     steps {
-                        // Build & Push Frontend with the correct API URL (removed trailing /api to fix double prefix)
-                        sh "docker build --build-arg REACT_APP_API_URL=http://${EC2_IP}:30001 -t abhi754/civicsense-frontend:latest ./my-app"
+                        // Build & Push Frontend with Vite environment variable
+                        sh "docker build --build-arg VITE_API_URL=http://${EC2_IP}:30001 -t abhi754/civicsense-frontend:latest ./my-app"
                         sh "docker push abhi754/civicsense-frontend:latest"
                     }
                 }

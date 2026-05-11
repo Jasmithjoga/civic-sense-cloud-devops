@@ -26,13 +26,17 @@ pipeline {
                 // Log in to Docker Hub
                 sh "echo ${DOCKERHUB_CREDS_PSW} | docker login -u ${DOCKERHUB_CREDS_USR} --password-stdin"
                 
-                // Build & Push Backend
-                sh "docker build -t abhi754/civicsense-backend:latest ./backend"
-                sh "docker push abhi754/civicsense-backend:latest"
-                
-                // Build & Push Frontend with the correct API URL (removed trailing /api to fix double prefix)
-                sh "docker build --build-arg REACT_APP_API_URL=http://${EC2_IP}:30001 -t abhi754/civicsense-frontend:latest ./my-app"
-                sh "docker push abhi754/civicsense-frontend:latest"
+                parallel(
+                    "Backend": {
+                        sh "docker build -t abhi754/civicsense-backend:latest ./backend"
+                        sh "docker push abhi754/civicsense-backend:latest"
+                    },
+                    "Frontend": {
+                        // Build & Push Frontend with the correct API URL (removed trailing /api to fix double prefix)
+                        sh "docker build --build-arg REACT_APP_API_URL=http://${EC2_IP}:30001 -t abhi754/civicsense-frontend:latest ./my-app"
+                        sh "docker push abhi754/civicsense-frontend:latest"
+                    }
+                )
             }
         }
 

@@ -38,7 +38,7 @@ pipeline {
                 stage('Frontend') {
                     steps {
                         // Build & Push Frontend with Vite environment variable
-                        sh "docker build --build-arg VITE_API_URL=http://${EC2_IP}:30001 -t abhi754/civicsense-frontend:latest ./my-app"
+                        sh "docker build --no-cache --build-arg VITE_API_URL=http://${EC2_IP}:30001 -t abhi754/civicsense-frontend:latest ./my-app"
                         sh "docker push abhi754/civicsense-frontend:latest"
                     }
                 }

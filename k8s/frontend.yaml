@@ -18,6 +18,7 @@ spec:
       containers:
       - name: frontend
         image: abhi754/civicsense-frontend:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
 ---

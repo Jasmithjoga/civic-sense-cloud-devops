@@ -31,15 +31,15 @@ pipeline {
             parallel {
                 stage('Backend') {
                     steps {
-                        sh "docker build -t abhi754/civicsense-backend:latest ./backend"
-                        sh "docker push abhi754/civicsense-backend:latest"
+                        sh "docker build -t abhi754/civicsense-backend:${BUILD_NUMBER} ./backend"
+                        sh "docker push abhi754/civicsense-backend:${BUILD_NUMBER}"
                     }
                 }
                 stage('Frontend') {
                     steps {
                         // Build & Push Frontend with Vite environment variable
-                        sh "docker build --no-cache --build-arg VITE_API_URL=http://${EC2_IP}:30001 -t abhi754/civicsense-frontend:latest ./my-app"
-                        sh "docker push abhi754/civicsense-frontend:latest"
+                        sh "docker build --no-cache --build-arg VITE_API_URL=http://${EC2_IP}:30001 -t abhi754/civicsense-frontend:${BUILD_NUMBER} ./my-app"
+                        sh "docker push abhi754/civicsense-frontend:${BUILD_NUMBER}"
                     }
                 }
             }
@@ -64,10 +64,18 @@ pipeline {
                             kubectl apply -f k8s/namespace.yaml
                             sleep 2
                             
-                            # Now apply the rest of the resources
-                            kubectl apply -f k8s/
+                            # CLEAN UP CONFLICTING OLD SERVICES that hold port 30080 or 30001
+                            kubectl delete svc civic-frontend-service --namespace default || true
+                            kubectl delete svc civic-backend-service --namespace default || true
                             
-                            # Force a restart to ensure it pulls the latest image we just pushed
+                            # Now apply the rest of the resources
+                            kubectl apply -f k8s/ || true
+                            
+                            # FORCE KUBERNETES TO USE THE BRAND NEW DOCKER IMAGE
+                            kubectl set image deployment/civic-frontend frontend=abhi754/civicsense-frontend:${BUILD_NUMBER} -n civic-sense
+                            kubectl set image deployment/civic-backend backend=abhi754/civicsense-backend:${BUILD_NUMBER} -n civic-sense
+                            
+                            # Force a restart
                             kubectl rollout restart deployment civic-frontend -n civic-sense
                             kubectl rollout restart deployment civic-backend -n civic-sense
                         '

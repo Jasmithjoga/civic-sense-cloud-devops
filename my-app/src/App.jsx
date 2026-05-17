@@ -1,4 +1,4 @@
-// Build Version: 1.0.1 (Force IP Update)
+// Build Version: 1.0.2 (Force IP Update to 44.200.24.172)
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';

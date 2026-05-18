@@ -66,6 +66,12 @@ export default function ReportIssuePage() {
             return;
         }
 
+        if (window.isSecureContext === false) {
+            toast.error("GPS requires a secure connection (HTTPS). Please select location manually on the map.");
+            setLocating(false);
+            return;
+        }
+
         setLocating(true);
         navigator.geolocation.getCurrentPosition(
             async (position) => {

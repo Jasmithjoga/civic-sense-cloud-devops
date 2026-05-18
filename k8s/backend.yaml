@@ -19,7 +19,6 @@ spec:
       - name: backend
         # We will replace this with your actual Docker Hub username later
         image: abhi754/civicsense-backend:latest
-        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         envFrom:
